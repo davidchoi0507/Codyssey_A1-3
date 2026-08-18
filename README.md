@@ -18,7 +18,7 @@
 ├── index.html          # 메인 웹페이지 (Hero, 추천 섹션, FAQ)
 ├── style.css           # 반응형 스타일시트
 ├── script.js           # 프론트엔드 비동기 통신 및 UI 렌더링
-└── README.md
+└── README.md           # 
 
 ## ⚙️ 환경 변수 설정
 Vercel 대시보드의 **Settings > Environment Variables**에 아래 키를 등록해야 정상 작동합니다.
