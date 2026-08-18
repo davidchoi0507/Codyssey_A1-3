@@ -15,7 +15,7 @@
 ## 📂 프로젝트 구조
 ```
 ├── api/
-│   └── recommend.py    # OpenAI API 연동 백엔드 서버리스 함수
+│   └── recommend.py    # Gemini API 연동 백엔드 서버리스 함수
 ├── index.html          # 메인 웹페이지 (Hero, 추천 섹션, FAQ)
 ├── style.css           # 반응형 스타일시트
 ├── script.js           # 프론트엔드 비동기 통신 및 UI 렌더링
