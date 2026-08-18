@@ -36,7 +36,7 @@ class handler(BaseHTTPRequestHandler):
                 return
 
             # 3. Gemini API 주소 및 데이터 작성
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key={api_key}"
             headers = {"Content-Type": "application/json"}
             
             prompt = f"""당신은 따뜻하고 감각적인 음악 큐레이터입니다.
