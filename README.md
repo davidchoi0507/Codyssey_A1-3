@@ -9,7 +9,7 @@
 ## 🛠️ 기술 스택
 - **Frontend:** HTML5, CSS3, Vanilla JavaScript (반응형 UI)
 - **Backend:** Python (Vercel Serverless Functions)
-- **AI / LLM:** OpenAI API (`gpt-3.5-turbo`)
+- **AI / LLM:** Gemini API (`gemini-3.5-flash-lite`)
 - **Deployment:** Vercel
 
 ## 📂 프로젝트 구조
