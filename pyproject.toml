@@ -1,6 +1,0 @@
-[project]
-name = "mood-melody"
-version = "0.1.0"
-
-[tool.vercel]
-entrypoint = "api.recommend:handler"
