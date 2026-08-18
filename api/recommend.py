@@ -1,36 +1,8 @@
 import json
 import os
+import urllib.request
+import urllib.error
 from http.server import BaseHTTPRequestHandler
-from openai import OpenAI
-
-SYSTEM_PROMPT = """당신은 따뜻하고 감각적인 음악 큐레이터입니다.
-사용자의 현재 기분을 읽고 한국어로 짧은 위로와 음악을 추천하세요.
-반드시 요청된 JSON 형식만 반환하며, 추천 음악에는 곡명과 아티스트를 포함하세요.
-"""
-
-# 최신 OpenAI 규격에 맞춘 JSON 스키마
-RESPONSE_SCHEMA = {
-    "type": "json_schema",
-    "json_schema": {
-        "name": "mood_music_recommendation",
-        "strict": True,
-        "schema": {
-            "type": "object",
-            "properties": {
-                "comfort_message": {
-                    "type": "string",
-                    "description": "사용자에게 전하는 따뜻한 위로의 한 줄",
-                },
-                "recommended_music": {
-                    "type": "string",
-                    "description": "추천 곡명과 아티스트",
-                },
-            },
-            "required": ["comfort_message", "recommended_music"],
-            "additionalProperties": False,
-        }
-    }
-}
 
 class handler(BaseHTTPRequestHandler):
     def _send_json(self, status_code, body):
@@ -47,6 +19,7 @@ class handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         try:
+            # 1. 프론트엔드에서 보낸 데이터 읽기
             content_length = int(self.headers.get("Content-Length", 0))
             raw_body = self.rfile.read(content_length)
             request_data = json.loads(raw_body.decode("utf-8"))
@@ -56,32 +29,59 @@ class handler(BaseHTTPRequestHandler):
                 self._send_json(400, {"error": "기분을 입력해주세요."})
                 return
 
+            # 2. Vercel 환경 변수에서 API 키 가져오기
             api_key = os.environ.get("OPENAI_API_KEY")
             if not api_key:
-                raise RuntimeError("OPENAI_API_KEY 환경변수가 설정되지 않았습니다.")
+                self._send_json(500, {"error": "서버에 API 키가 설정되지 않았습니다."})
+                return
 
-            client = OpenAI(api_key=api_key)
+            # 3. OpenAI API로 보낼 편지(데이터) 작성
+            url = "https://api.openai.com/v1/chat/completions"
+            headers = {
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {api_key}"
+            }
             
-            # 여기서 에러가 났었습니다! 존재하지 않는 responses 대신 올바른 chat.completions 사용
-            completion = client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[
-                    {"role": "system", "content": SYSTEM_PROMPT},
+            system_prompt = """당신은 따뜻하고 감각적인 음악 큐레이터입니다.
+사용자의 현재 기분을 읽고 한국어로 짧은 위로와 음악을 추천하세요.
+답변은 반드시 아래 JSON 형식으로만 해주세요:
+{
+  "comfort_message": "위로의 한 줄",
+  "recommended_music": "곡명 - 아티스트"
+}"""
+
+            data = {
+                "model": "gpt-3.5-turbo", # 빠르고 안정적인 3.5 모델 사용
+                "messages": [
+                    {"role": "system", "content": system_prompt},
                     {"role": "user", "content": f"사용자의 기분: {mood}"}
                 ],
-                response_format=RESPONSE_SCHEMA
-            )
-            
-            # AI가 준 JSON 텍스트를 파이썬 데이터로 변환
-            recommendation = json.loads(completion.choices[0].message.content)
+                "temperature": 0.7
+            }
 
-            self._send_json(200, recommendation)
+            # 4. 순수 파이썬 기능으로 우체국(API)에 편지 접수
+            req = urllib.request.Request(url, data=json.dumps(data).encode("utf-8"), headers=headers)
             
-        except json.JSONDecodeError:
-            self._send_json(400, {"error": "요청 본문은 올바른 JSON이어야 합니다."})
+            try:
+                # 5. 우체국에서 답장 받기
+                with urllib.request.urlopen(req) as response:
+                    response_body = response.read().decode("utf-8")
+                    result_json = json.loads(response_body)
+                    
+                    # AI가 준 텍스트(문자열)를 다시 JSON으로 변환
+                    ai_content = result_json["choices"][0]["message"]["content"]
+                    recommendation = json.loads(ai_content)
+                    
+                    self._send_json(200, recommendation)
+                    
+            except urllib.error.HTTPError as e:
+                error_info = e.read().decode()
+                print(f"OpenAI API Error: {error_info}")
+                self._send_json(500, {"error": "OpenAI 서버와 통신하는 중 문제가 발생했습니다."})
+
         except Exception as error:
-            print(f"recommend API error: {error}")
-            self._send_json(500, {"error": "추천을 생성하는 중 서버 오류가 발생했습니다."})
+            print(f"General Server Error: {error}")
+            self._send_json(500, {"error": "추천을 생성하는 중 서버 내부 오류가 발생했습니다."})
 
     def do_GET(self):
         self._send_json(405, {"error": "POST 요청만 지원합니다."})
