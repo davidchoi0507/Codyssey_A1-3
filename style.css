@@ -1,6 +1,6 @@
 :root {
   --ink: #202032;
-  --muted: #6d6d80;
+  --muted: #4e4e5e; /* 기존보다 채도를 높여 가독성 대폭 개선 */
   --cream: #fffdf8;
   --lavender: #ece7ff;
   --purple: #6254d7;
@@ -14,13 +14,41 @@ body { margin: 0; background: var(--cream); color: var(--ink); font-family: "Nan
 .container { width: min(1120px, calc(100% - 48px)); margin: 0 auto; }
 .section { scroll-margin-top: 76px; }
 
-.site-header { position: sticky; top: 0; z-index: 10; background: rgba(255, 253, 248, .85); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(32, 32, 50, .06); }
+/* ==========================================================
+   1. 상단 헤더 및 네비게이션 가독성 완벽 개선
+   ========================================================== */
+.site-header { 
+  position: sticky; 
+  top: 0; 
+  z-index: 10; 
+  background: rgba(255, 253, 248, 0.95); /* 회색빛을 없애고 화사한 크림 반투명 배경 적용 */
+  backdrop-filter: blur(14px); 
+  border-bottom: 1px solid rgba(32, 32, 50, 0.08); 
+}
 .navbar { height: 76px; display: flex; align-items: center; justify-content: space-between; }
-.logo { color: var(--ink); font: 700 1.36rem "DM Sans", sans-serif; text-decoration: none; letter-spacing: -.07em; }
-.logo span { color: var(--purple); }
-.nav-links { display: flex; gap: 29px; }
-.nav-links a { color: var(--muted); text-decoration: none; font-size: .91rem; transition: color .2s ease; }
-.nav-links a:hover { color: var(--purple); }
+
+/* 로고 (moodwave) 가독성 강화 */
+.logo { 
+  color: var(--ink); 
+  font: 700 1.4rem "DM Sans", sans-serif; 
+  text-decoration: none; 
+  letter-spacing: -.07em; 
+}
+.logo span { 
+  color: var(--purple); /* 'mood' 글자에 선명한 포인트 퍼플 적용 */
+  font-weight: 800; 
+}
+
+/* 네비게이션 메뉴 (소개, 추천받기, FAQ 등) 글자 진하게 수정 */
+.nav-links { display: flex; gap: 29px; align-items: center; }
+.nav-links a { 
+  color: #2d2d3a !important; /* 기존 흐린 회색(#6d6d80)에서 진하고 선명한 색상으로 변경 */
+  text-decoration: none; 
+  font-size: .95rem; 
+  font-weight: 600;
+  transition: color .2s ease; 
+}
+.nav-links a:hover { color: var(--purple) !important; }
 
 .hero { position: relative; min-height: 610px; display: grid; place-items: center; overflow: hidden; background: linear-gradient(128deg, #f2eeff 0%, #fff7f3 57%, #fff0e7 100%); }
 .hero-content { position: relative; z-index: 1; padding: 112px 0; }
@@ -45,7 +73,7 @@ h2 { font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.28; }
 .input-row { display: flex; gap: 10px; }
 input { min-width: 0; flex: 1; border: 1px solid #dcd9e8; border-radius: 12px; padding: 15px 16px; color: var(--ink); outline: none; font: .92rem "Nanum Gothic", sans-serif; }
 input:focus { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(98, 84, 215, .13); }
-.hint { margin: 13px 0 0; color: #9998a5; font-size: .76rem; }
+.hint { margin: 13px 0 0; color: #787785; font-size: .78rem; }
 .result { margin-top: 28px; padding: 22px 28px; border-radius: 16px; background: var(--lavender); line-height: 1.7; }
 .result strong { color: var(--purple); }
 
@@ -64,7 +92,7 @@ footer { padding: 28px 24px; background: #191826; color: #a6a4b3; text-align: ce
   .container { width: min(100% - 36px, 560px); }
   .navbar { height: 66px; }
   .nav-links { gap: 16px; }
-  .nav-links a { font-size: .78rem; }
+  .nav-links a { font-size: .82rem; }
   .hero { min-height: 540px; }
   .hero-content { padding: 80px 0; }
   .orb-one { width: 230px; height: 230px; top: 7%; right: -75px; }
@@ -78,8 +106,7 @@ footer { padding: 28px 24px; background: #191826; color: #a6a4b3; text-align: ce
 
 /* ==================== [보너스 과제] 다크 모드 및 부드러운 전환 UX ==================== */
 
-/* 1. 화면 전체 및 주요 요소의 색상이 부드럽게 스르륵 바뀌도록 transition 추가 */
-body, .hero, .mood-form, input, .faq, .theme-toggle-btn, .primary-button {
+body, .hero, .site-header, .mood-form, input, .faq, .theme-toggle-btn, .primary-button {
   transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, background 0.4s ease;
 }
 
@@ -89,6 +116,23 @@ body.dark-mode {
   --muted: #a0a0b8;
   --lavender: #211f38;
   --line: rgba(255, 255, 255, 0.12);
+}
+
+/* 다크모드일 때 상단 헤더 배경 */
+body.dark-mode .site-header {
+  background: rgba(18, 18, 28, 0.9) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 다크모드일 때 네비게이션 메뉴 및 로고 글자 흰색으로 확실히 보장 */
+body.dark-mode .nav-links a {
+  color: #f0f0f8 !important;
+}
+body.dark-mode .nav-links a:hover {
+  color: #a78bfa !important;
+}
+body.dark-mode .logo {
+  color: #ffffff;
 }
 
 body.dark-mode .hero {
@@ -106,13 +150,11 @@ body.dark-mode .faq {
   background: #0f0e17;
 }
 
-/* 2. 다크모드일 때 글자가 안 보이던 버튼 가독성 및 디자인 완벽 개선 */
 body.dark-mode .primary-button {
-  background-color: #7c5cfc; /* 다크모드에서 눈에 띄는 화사한 포인트 퍼플 컬러 */
-  color: #ffffff !important;  /* 글자 색상을 강제 흰색으로 선명하게 고정 */
+  background-color: #7c5cfc; 
+  color: #ffffff !important;  
 }
 
-/* 마이크로 인터랙션: 테마 버튼 호버 및 클릭 효과 */
 .theme-toggle-btn {
   background: transparent;
   border: 1px solid var(--line);
