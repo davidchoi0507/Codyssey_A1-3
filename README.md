@@ -3,7 +3,7 @@
 사용자의 현재 감정과 상황을 분석하여 위로의 한 줄과 어울리는 음악을 추천해 주는 웹 애플리케이션입니다.
 
 ## 🔗 배포 및 저장소 링크
-- **서비스 배포 URL:** https://codyssey-a1-3-r4cdyazbr-david-choi1.vercel.app
+- **서비스 배포 URL:** https://codyssey-a1-3-4crxcgzam-david-choi1.vercel.app
 - **GitHub 저장소 URL:** https://github.com/davidchoi0507/Codyssey_A1-3
 
 ## 🛠️ 기술 스택
