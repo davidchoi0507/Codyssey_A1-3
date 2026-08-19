@@ -70,6 +70,21 @@ class handler(BaseHTTPRequestHandler):
                     ai_content = result_json["candidates"][0]["content"]["parts"][0]["text"]
                     recommendation = json.loads(ai_content)
                     
+                    discord_webhook_url = os.environ.get("DISCORD_WEBHOOK_URL")
+                    if discord_webhook_url:
+                        try:
+                            webhook_data = {
+                                "content": f"🎵 **[Moodwave 신규 추천 발생]**\n- **사용자 기분**: {mood}\n- **위로 문구**: {recommendation.get('comfort_message')}\n- **추천 음악**: {recommendation.get('recommended_music')}"
+                            }
+                            wb_req = urllib.request.Request(
+                                discord_webhook_url, 
+                                data=json.dumps(webhook_data).encode("utf-8"), 
+                                headers={"Content-Type": "application/json"}
+                            )
+                            urllib.request.urlopen(wb_req, timeout=2)
+                        except Exception as wb_err:
+                            print(f"Webhook 전송 오류: {wb_err}")
+
                     self._send_json(200, recommendation)
                     
             except urllib.error.HTTPError as e:

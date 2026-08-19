@@ -51,3 +51,23 @@ function escapeHtml(value) {
   element.textContent = String(value);
   return element.innerHTML;
 }
+
+const themeToggle = document.getElementById('theme-toggle');
+
+if (themeToggle) {
+  // 로컬스토리지에서 기존 테마 설정 불러오기
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    document.body.classList.add('dark-mode');
+    themeToggle.textContent = '☀️';
+  }
+
+  themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    const isDark = document.body.classList.contains('dark-mode');
+    
+    // 버튼 아이콘 변경 및 사용자의 선택 저장
+    themeToggle.textContent = isDark ? '☀️' : '🌙';
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  });
+}
