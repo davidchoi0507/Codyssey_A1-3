@@ -7,21 +7,21 @@
 - **GitHub 저장소 URL:** https://github.com/davidchoi0507/Codyssey_A1-3
 
 ## 🛠️ 기술 스택
-- **Frontend:** HTML5, CSS3, Vanilla JavaScript (반응형 UI)
+- **Frontend:** HTML5, CSS3, Vanilla JavaScript (반응형 웹 UI)
 - **Backend:** Python (Vercel Serverless Functions)
-- **AI / LLM:** Gemini API (`gemini-3.5-flash-lite`)
+- **AI / LLM:** Google Gemini API (`gemini-3.5-flash-lite`)
 - **Deployment:** Vercel
 
-## 📂 프로젝트 구조
+## 프로젝트 구조
 ```
 ├── api/
-│   └── recommend.py    # Gemini API 연동 백엔드 서버리스 함수
-├── index.html          # 메인 웹페이지 (Hero, 추천 섹션, FAQ)
-├── style.css           # 반응형 스타일시트
-├── script.js           # 프론트엔드 비동기 통신 및 UI 렌더링
-└── README.md
+│   └── recommend.py    # Gemini API 연동 백엔드 서버리스 함수 및 알림 연동
+├── index.html          # 메인 웹페이지 (Hero, AI 추천 섹션, FAQ)
+├── style.css           # 반응형 스타일시트 및 다크모드 테마
+├── script.js           # 프론트엔드 비동기 통신, UX 예외 처리, 다크모드 토글
+└── README.md           # 프로젝트 문서
 ```
 
-## ⚙️ 환경 변수 설정
+## 환경 변수 설정
 Vercel 대시보드의 **Settings > Environment Variables**에 아래 키를 등록해야 정상 작동합니다.
 - `GEMINI_API_KEY`: Gemini API Secret Key
