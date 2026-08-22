@@ -24,4 +24,4 @@
 
 ## 환경 변수 설정
 Vercel 대시보드의 **Settings > Environment Variables**에 아래 키를 등록해야 정상 작동합니다.
-- `GEMINI_API_KEY`: Gemini API Secret Key
+- `GEMINI_API_KEY`
